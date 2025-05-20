@@ -1,0 +1,27 @@
+{
+  "name": "hall-of-shame-api",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "A RESTful API built with Node.js and Express.js that provides data on nominees and winners of the Golden Raspberry Awards (a.k.a. the Razzies) for the \"Worst Picture\" category.",
+  "main": "servers.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^3.2.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.1"
+  }
+}
