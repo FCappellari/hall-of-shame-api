@@ -1,15 +1,13 @@
 import express from "express";
 
 import { seedDatabase } from "./database/seed.js";
+import producersRoutes from "./routes/producersRoutes.js";
 
-seedDatabase();
+await seedDatabase();
 
 const app = express();
 
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.json({ message: "hello world" });
-});
+app.use("/producers", producersRoutes);
 
 export default app;
