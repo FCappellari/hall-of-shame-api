@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "../src/app.js";
+import expectedJson from "./expected-intervals.json";
 import { seedDatabase } from "../src/database/seed.js";
 
 beforeAll(async () => {
@@ -27,5 +28,13 @@ describe("GET producers/winners-intervals", () => {
       expect(item).toHaveProperty("previousWin");
       expect(item).toHaveProperty("followingWin");
     });
+  });
+
+  it("should return the correct values based on the CSV data", async () => {
+    const res = await request(app).get("/producers/winners-intervals");
+
+    expect(res.status).toBe(200);
+    expect(res.body.min).toEqual(expect.arrayContaining(expectedJson.min));
+    expect(res.body.max).toEqual(expect.arrayContaining(expectedJson.max));
   });
 });
