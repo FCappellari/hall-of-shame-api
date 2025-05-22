@@ -11,6 +11,14 @@ const __dirname = dirname(__filename);
 
 const csvFilePath = path.join(__dirname, "Movielist.csv");
 
+function splitProducers(rawValue) {
+  if (!rawValue || typeof rawValue !== "string") return [];
+  return rawValue
+    .split(/\s+and\s+|,\s*/g)
+    .map((producer) => producer.trim())
+    .filter((p) => p.length > 0);
+}
+
 export async function seedDatabase() {
   return new Promise((resolve, reject) => {
     fs.createReadStream(csvFilePath)
@@ -18,6 +26,12 @@ export async function seedDatabase() {
       .on("data", (row) => {
         const { year, title, studios, producers, winner } = row;
         const isWinner = winner && winner.trim().toLowerCase() === "yes";
+
+        const parsedYear = parseInt(year, 10);
+        if (!parsedYear || isNaN(parsedYear)) {
+          console.warn(`Invalid year for movie ${title}: ${year}`);
+          return;
+        }
 
         db.serialize(() => {
           db.run(
@@ -30,10 +44,12 @@ export async function seedDatabase() {
               }
 
               const movieId = this.lastID;
-              const producersList = producers
-                .split(/,| and /)
-                .map((producer) => producer.trim())
-                .filter((p) => p.length > 0);
+              const producersList = splitProducers(producers);
+
+              if (!producersList.length) {
+                console.warn(`No producers found for movie ${title}`);
+                return;
+              }
 
               producersList.forEach((producer) => {
                 db.run(
@@ -60,11 +76,11 @@ export async function seedDatabase() {
         });
       })
       .on("error", (error) => {
-        console.error("Error ao ler CSV: ", error);
+        console.error("Error reading CSV: ", error);
         reject(error);
       })
       .on("end", () => {
-        console.log("CSV file successfully processed");
+        console.log("CSV file successfully processed. 🆗");
         resolve();
       });
   });
