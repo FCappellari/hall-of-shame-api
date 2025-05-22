@@ -1,7 +1,7 @@
 import app from "./src/app.js";
 import dotenv from "dotenv";
 
-import { seedDatabase } from "./database/seed.js";
+import { seedDatabase } from "./src/database/seed.js";
 
 await seedDatabase();
 
