@@ -1,9 +1,6 @@
 import express from "express";
 
-import { seedDatabase } from "./database/seed.js";
 import producersRoutes from "./routes/producersRoutes.js";
-
-await seedDatabase();
 
 const app = express();
 
